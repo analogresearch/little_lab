@@ -1,7 +1,7 @@
 //////////////////////
 /// LITTLE████_LAB ///
 //////////////////////
-/// version 0.12 /////
+/// version 0.2 //////
 //////////////////////
 /// stef ♥ 2020 //////
 //////////////////////
@@ -29,13 +29,13 @@ void setup() {
   pinMode(5, OUTPUT); //out2
   pinMode(3, OUTPUT); //out3
 
-  //midi channel
+  //schalter für midi channel
   pinMode(A3, INPUT_PULLUP); //1
   pinMode(A4, INPUT_PULLUP); //2
   pinMode(A5, INPUT_PULLUP); //4
   pinMode(A6, INPUT_PULLUP); //8
 
-  //program nr
+  //schalter für program nr
   pinMode(A7, INPUT_PULLUP); //1
   pinMode(8, INPUT_PULLUP);  //2
   pinMode(12, INPUT_PULLUP); //4
@@ -53,43 +53,55 @@ void loop() {
   Serial.print("\tp:\t");
   Serial.print(program);
 
-  in1 = analogRead(A0);
-  in2 = analogRead(A1);
-  in3 = analogRead(A2);
+  switch (program) {
+    case 1:
+      //testprogramm 1
 
-  out1 = in1 / 4;
-  out2 = in2 / 4;
-  out3 = in3 / 4;
+      in1 = analogRead(A0);
+      in2 = analogRead(A1);
+      in3 = analogRead(A2);
 
-  analogWrite(6, out1);
-  analogWrite(5, out2);
-  analogWrite(3, out3);
+      out1 = in1 / 4;
+      out2 = in2 / 4;
+      out3 = in3 / 4;
 
-  Serial.print("\tin:\t");
-  Serial.print(in1);
-  Serial.print("\t");
-  Serial.print(in2);
-  Serial.print("\t");
-  Serial.print(in3);
+      analogWrite(6, out1);
+      analogWrite(5, out2);
+      analogWrite(3, out3);
 
-  Serial.print("\tout:\t");
-  Serial.print(out1);
-  Serial.print("\t");
-  Serial.print(out2);
-  Serial.print("\t");
-  Serial.println(out3);
+      Serial.print("\tin:\t");
+      Serial.print(in1);
+      Serial.print("\t");
+      Serial.print(in2);
+      Serial.print("\t");
+      Serial.print(in3);
 
-  delay(100);
+      Serial.print("\tout:\t");
+      Serial.print(out1);
+      Serial.print("\t");
+      Serial.print(out2);
+      Serial.print("\t");
+      Serial.println(out3);
 
+      delay(100);
+      break;
+    case 2:
+      //testprogramm 2
+      //do nothing
+      break;
+    default:
+      //do nothing
+      break;
+  }
 }
 
 void set_address() { // midi codeswitch auslesen
-  midi_channel = !digitalRead(A3) + (!digitalRead(A4) << 1) + (!digitalRead(A5) << 2 ) + (!(analogRead(A6)>512) << 3);
+  midi_channel = !digitalRead(A3) + (!digitalRead(A4) << 1) + (!digitalRead(A5) << 2 ) + (!(analogRead(A6) > 512) << 3);
   if (midi_channel == 0) midi_channel = 16;
 }
 
 void set_program() { // program codeswitch auslesen
-  program = !(analogRead(A7)>512) + (!digitalRead(8) << 1) + (!digitalRead(12) << 2 ) + (!digitalRead(13) << 3);
+  program = !(analogRead(A7) > 512) + (!digitalRead(8) << 1) + (!digitalRead(12) << 2 ) + (!digitalRead(13) << 3);
 }
 
 void setPwmFrequency(int pin, int divisor) {
